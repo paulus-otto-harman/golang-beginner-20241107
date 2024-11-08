@@ -1,0 +1,304 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.4 (Homebrew)
+-- Dumped by pg_dump version 16.4 (Homebrew)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: customers; Type: TABLE; Schema: public; Owner: paul
+--
+
+CREATE TABLE public.customers (
+    id smallint NOT NULL,
+    name character varying(15) NOT NULL,
+    phone character varying(15) NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone,
+    deleted_at timestamp with time zone
+);
+
+
+ALTER TABLE public.customers OWNER TO paul;
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: paul
+--
+
+CREATE SEQUENCE public.customers_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.customers_id_seq OWNER TO paul;
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: paul
+--
+
+ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
+
+
+--
+-- Name: order_items; Type: TABLE; Schema: public; Owner: paul
+--
+
+CREATE TABLE public.order_items (
+    id smallint NOT NULL,
+    order_id smallint NOT NULL,
+    book_id smallint NOT NULL,
+    quantity smallint NOT NULL,
+    price money NOT NULL,
+    subtotal money NOT NULL
+);
+
+
+ALTER TABLE public.order_items OWNER TO paul;
+
+--
+-- Name: order_items_id_seq; Type: SEQUENCE; Schema: public; Owner: paul
+--
+
+CREATE SEQUENCE public.order_items_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.order_items_id_seq OWNER TO paul;
+
+--
+-- Name: order_items_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: paul
+--
+
+ALTER SEQUENCE public.order_items_id_seq OWNED BY public.order_items.id;
+
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: paul
+--
+
+CREATE TABLE public.orders (
+    id integer NOT NULL,
+    customer_id smallint NOT NULL,
+    shipping_address_id smallint NOT NULL,
+    payment_method character varying NOT NULL,
+    total_amount integer NOT NULL,
+    final_amount integer NOT NULL,
+    order_date timestamp with time zone NOT NULL,
+    status character varying DEFAULT 'processing'::character varying NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone,
+    deleted_at timestamp with time zone
+);
+
+
+ALTER TABLE public.orders OWNER TO paul;
+
+--
+-- Name: shipping_addresses; Type: TABLE; Schema: public; Owner: paul
+--
+
+CREATE TABLE public.shipping_addresses (
+    id smallint NOT NULL,
+    street character varying(64) NOT NULL,
+    city character varying(16) NOT NULL,
+    postalcode character varying(6) NOT NULL,
+    country character varying(60) NOT NULL,
+    customer_id smallint NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone,
+    deleted_at timestamp with time zone
+);
+
+
+ALTER TABLE public.shipping_addresses OWNER TO paul;
+
+--
+-- Name: shipping_addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: paul
+--
+
+CREATE SEQUENCE public.shipping_addresses_id_seq
+    AS smallint
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.shipping_addresses_id_seq OWNER TO paul;
+
+--
+-- Name: shipping_addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: paul
+--
+
+ALTER SEQUENCE public.shipping_addresses_id_seq OWNED BY public.shipping_addresses.id;
+
+
+--
+-- Name: customers id; Type: DEFAULT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.customers_id_seq'::regclass);
+
+
+--
+-- Name: order_items id; Type: DEFAULT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.order_items ALTER COLUMN id SET DEFAULT nextval('public.order_items_id_seq'::regclass);
+
+
+--
+-- Name: shipping_addresses id; Type: DEFAULT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.shipping_addresses ALTER COLUMN id SET DEFAULT nextval('public.shipping_addresses_id_seq'::regclass);
+
+
+--
+-- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: paul
+--
+
+COPY public.customers (id, name, phone, created_at, updated_at, deleted_at) FROM stdin;
+1	customer satu	1	2024-11-08 00:37:56.710035+07	\N	\N
+6	John Doe	2	2024-11-08 06:57:38.741775+07	\N	\N
+\.
+
+
+--
+-- Data for Name: order_items; Type: TABLE DATA; Schema: public; Owner: paul
+--
+
+COPY public.order_items (id, order_id, book_id, quantity, price, subtotal) FROM stdin;
+\.
+
+
+--
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: paul
+--
+
+COPY public.orders (id, customer_id, shipping_address_id, payment_method, total_amount, final_amount, order_date, status, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: shipping_addresses; Type: TABLE DATA; Schema: public; Owner: paul
+--
+
+COPY public.shipping_addresses (id, street, city, postalcode, country, customer_id, created_at, updated_at, deleted_at) FROM stdin;
+\.
+
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: paul
+--
+
+SELECT pg_catalog.setval('public.customers_id_seq', 6, true);
+
+
+--
+-- Name: order_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: paul
+--
+
+SELECT pg_catalog.setval('public.order_items_id_seq', 1, false);
+
+
+--
+-- Name: shipping_addresses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: paul
+--
+
+SELECT pg_catalog.setval('public.shipping_addresses_id_seq', 1, false);
+
+
+--
+-- Name: customers customers_phone_key; Type: CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_phone_key UNIQUE (phone);
+
+
+--
+-- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: order_items order_items_pkey; Type: CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.order_items
+    ADD CONSTRAINT order_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shipping_addresses shipping_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.shipping_addresses
+    ADD CONSTRAINT shipping_addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orders orders_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customers(id) NOT VALID;
+
+
+--
+-- Name: orders orders_shipping_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_shipping_address_id_fkey FOREIGN KEY (shipping_address_id) REFERENCES public.shipping_addresses(id) NOT VALID;
+
+
+--
+-- Name: shipping_addresses shipping_addresses_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: paul
+--
+
+ALTER TABLE ONLY public.shipping_addresses
+    ADD CONSTRAINT shipping_addresses_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customers(id) NOT VALID;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
